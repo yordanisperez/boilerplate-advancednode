@@ -14,7 +14,7 @@ app.set('view engine', 'pug');
 app.set('views',process.cwd() + '/views/pug'); //Sets the directory where all the views (.pug) are stored.
 
 app.route('/').get((req, res) => {
-  res.render('index');
+  res.render('index',{title: 'Hello', message: 'Please login'});
 });
 
 const PORT = process.env.PORT || 8080;
