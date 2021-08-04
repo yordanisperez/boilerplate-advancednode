@@ -10,12 +10,14 @@ fccTesting(app); //For FCC testing purposes
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.set('view engine', 'pug');
+app.set('views',process.cwd() + '/views/pug'); //Sets the directory where all the views (.pug) are stored.
 
 app.route('/').get((req, res) => {
-  res.render('Load your view here');
+  res.render('index');
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log('Listening on port ' + PORT);
 });
