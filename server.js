@@ -27,6 +27,7 @@ app.use(passport.session());
 
 
 
+
 app.set('view engine', 'pug');
 app.set('views',process.cwd() + '/views/pug'); //Sets the directory where all the views (.pug) are stored.
 
