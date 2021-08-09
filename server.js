@@ -49,6 +49,12 @@ myDB(async client =>
       
         res.render('profile',{username: req.user.username});
       });
+
+      app.route('/logout').get((req, res) => {
+        req.logout();
+        res.redirect('/');
+      });
+
       passport.serializeUser((user, done) => {
         done(null, user._id);
       });
