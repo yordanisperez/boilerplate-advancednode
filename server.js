@@ -41,11 +41,13 @@ myDB(async client =>
         });
       });
       app.route('/login').post(passport.authenticate('local', { failureRedirect: '/' }), (req, res) => {
+
         res.redirect('/profile');
       });
     
       app.route('/profile').get(ensureAuthenticated,(req, res) => {
-        res.render('profile');
+      
+        res.render('profile',{username: req.user.username});
       });
       passport.serializeUser((user, done) => {
         done(null, user._id);
@@ -56,7 +58,7 @@ myDB(async client =>
         });
       });
 
-      
+
       passport.use(new LocalStrategy(
         function(username, password, done) {
           myDataBase.findOne({ username: username }, function (err, user) {
