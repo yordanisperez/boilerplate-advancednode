@@ -39,7 +39,10 @@ module.exports = function (app, myDataBase) {
         function(accessToken, refreshToken, profile, cb) {
           console.log(profile);
           //Database logic here with callback containing our user object
+         cb(null,profile);
         }
+        
       ));
+
 
 }
