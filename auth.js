@@ -39,35 +39,31 @@ module.exports = function (app, myDataBase) {
         function(accessToken, refreshToken, profile, cb) {
           console.log(profile);
           //Database logic here with callback containing our user object
-          myDataBase.findOne({ username: profile.username }, function (err, user) 
-          {
-           
-            if (err) { return cb(err); }
-            if (!user) { 
-                //Add the user to database
-                myDataBase.insertOne({
-                    username:profile.username
-                  
-                  },
-                    (err, doc) => {
-                      if (err) {
-                        res.redirect('/');
-                      } else {
-                        // The inserted document is held within
-                        // the ops property of the doc
-                        return cb(null, doc);
-                      }
-                    }
-                  )
-
-
-                return cb(null, false);
-             }
-            
-            
-            return cb(null, user);
-          });
-
+          myDataBase.findOneAndUpdate(
+            { id: profile.id },
+            {
+              $setOnInsert: {
+                id: profile.id,
+                name: profile.displayName || 'John Doe',
+                photo: profile.photos[0].value || '',
+                email: Array.isArray(profile.emails)
+                  ? profile.emails[0].value
+                  : 'No public email',
+                created_on: new Date(),
+                provider: profile.provider || ''
+              },
+              $set: {
+                last_login: new Date()
+              },
+              $inc: {
+                login_count: 1
+              }
+            },
+            { upsert: true, new: true },
+            (err, doc) => {
+              return cb(null, doc.value);
+            }
+          );
         }
 
       ));
