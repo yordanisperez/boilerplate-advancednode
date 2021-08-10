@@ -39,9 +39,37 @@ module.exports = function (app, myDataBase) {
         function(accessToken, refreshToken, profile, cb) {
           console.log(profile);
           //Database logic here with callback containing our user object
-         cb(null,profile);
+          myDataBase.findOne({ username: profile.username }, function (err, user) 
+          {
+           
+            if (err) { return cb(err); }
+            if (!user) { 
+                //Add the user to database
+                myDataBase.insertOne({
+                    username:profile.username
+                  
+                  },
+                    (err, doc) => {
+                      if (err) {
+                        res.redirect('/');
+                      } else {
+                        // The inserted document is held within
+                        // the ops property of the doc
+                        return cb(null, doc);
+                      }
+                    }
+                  )
+
+
+                return cb(null, false);
+             }
+            
+            
+            return cb(null, user);
+          });
+
         }
-        
+
       ));
 
 
